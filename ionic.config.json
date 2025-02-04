@@ -1,0 +1,7 @@
+{
+  "name": "OnOffCurro",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
