@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -11,15 +11,16 @@ import { Router } from '@angular/router';
 export class HomePage implements OnInit {
   email: string = '';
   password: string = '';
-  isLogin: boolean = true; // Controla si estamos en login o en registro
+  name: string = '';
+  phone: string = '';
+  isLogin: boolean = true;  // Controla si estamos en login o en registro
 
   constructor(private afAuth: AngularFireAuth, private router: Router) {}
 
   ngOnInit() {
-    // Verificar si el usuario ya está autenticado
     this.afAuth.onAuthStateChanged((user) => {
       if (user) {
-        this.router.navigate(['/app']);  // Redirige si el usuario está autenticado
+        console.log("Usuario autenticado:", user);
       }
     });
   }
@@ -39,9 +40,21 @@ export class HomePage implements OnInit {
         this.router.navigate(['/app']); // Redirige al home de la app
       } else {
         // Si estamos en registro
-        await this.afAuth.createUserWithEmailAndPassword(this.email, this.password);
-        console.log('Registro exitoso');
-        this.router.navigate(['/app']); // Redirige al home de la app
+        const userCredential = await this.afAuth.createUserWithEmailAndPassword(this.email, this.password);
+        const user = userCredential.user;
+
+        if (!user) {
+          throw new Error("No se pudo crear el usuario.");
+        }
+// Solo guardamos el nombre sin la foto
+if (this.name) {
+  await user.updateProfile({
+    displayName: this.name,
+  });
+}
+
+        console.log('Usuario registrado con éxito');
+        this.router.navigate(['/app']);
       }
     } catch (error: any) {
       console.error('Error:', error.message);

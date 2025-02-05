@@ -12,6 +12,7 @@ export class AuthGuard implements CanActivate {
 
   canActivate(): Observable<boolean> {
     return this.afAuth.authState.pipe(
+      /* El uso de take(1) es mejor en este caso porque garantiza que authState solo se revise una vez y no deja suscripción abierta innecesariamente. */
       take(1),
       map((user) => {
         if (user) {

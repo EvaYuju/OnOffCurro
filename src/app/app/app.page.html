@@ -1,13 +1,21 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>app</ion-title>
+    <ion-title>OnOffCurro</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">app</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <div class="profile-container">
+    <h2 *ngIf="user; else noUser">¡Hola, {{ user?.displayName }}!</h2>
+    
+    <ng-template #noUser>
+      <h2>¡Bienvenido!</h2>
+    </ng-template>
+
+    <p>Estado: {{ working ? 'Trabajando' : 'No trabajando' }}</p>
+
+    <ion-button (click)="toggleWorkStatus()">
+      {{ working ? 'Finalizar jornada' : 'Iniciar jornada' }}
+    </ion-button>
+  </div>
 </ion-content>
